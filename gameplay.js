@@ -1,7 +1,7 @@
 const X_TOKEN = 'X';
 const O_TOKEN = 'O'; 
 
-const gameboard = (() => {
+const board = (() => {
     let gameBoard = [
         ['', '', ''],
         ['', '', ''],
@@ -42,3 +42,13 @@ const gameboard = (() => {
     
     return {markBoard, checkWinner, getToken};
 })();
+
+const Player = (name, token) => {
+    let token = token;
+    let name = name;
+
+    const getName = () => {return name};
+    const getToken = () => {return token};
+
+    return {getName, getToken};
+};
