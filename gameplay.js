@@ -49,6 +49,23 @@ const Player = (name, token) => {
 
     const getName = () => {return name};
     const getToken = () => {return token};
+    const playTurn = (board, row, col) => {
+        if (!board.markBoard(token, row, col)) {
+            // do something here, since position is already taken
+        }
+        board.checkWinner(token);
+    };
 
-    return {getName, getToken};
+    return {getName, getToken, playTurn};
 };
+
+// probably not a good approach
+function playGame(p1Name, p2Name) {
+    let gameOver = false;
+    let player1 = Player(p1Name, X_TOKEN);
+    let player2 = Player(p2Name, O_TOKEN);
+
+    while (!gameOver) {
+        // busy waiting??
+    }
+}

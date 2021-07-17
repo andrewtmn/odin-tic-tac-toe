@@ -1,0 +1,42 @@
+body {
+    text-align: center;
+}
+
+h1 {
+    background-color:aliceblue;
+    padding: 1%;
+    margin: 
+}
+
+#player-header {
+    margin: 1% 0;
+    padding: 1%;
+    background-color:blanchedalmond;
+}
+
+#gameboard {
+    background-color:aquamarine;
+    display: grid;
+    grid-template-columns: repeat(3, 10%);
+    position: relative;
+    width: auto;
+    margin: 10px 0;
+    padding: 10px;
+    justify-content: center;
+}
+
+.token {
+    background-color:beige;
+    border-style: solid;
+    border-color:aquamarine;
+    border-width: 0.5%;
+    padding: 10px;
+    aspect-ratio: 1;
+}
+
+#new-game {
+    text-align: center;
+    margin: 1%;
+    padding: 1%;
+    background-color:bisque;
+}
