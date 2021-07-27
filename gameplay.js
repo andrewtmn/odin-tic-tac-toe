@@ -8,11 +8,15 @@ const board = (() => {
         ['', '', '']
     ];
 
-    const markBoard = (sym, row, col) => {
+    let p1 = undefined;
+    let p2 = undefined;
+    let currentPlayer = undefined;
+
+    const markBoard = (row, col) => {
         if (gameBoard[row][col] === X_TOKEN || gameBoard[row][col] === O_TOKEN) {
             return false;
         }
-        gameBoard[row][col] = sym;
+        gameBoard[row][col] = currentPlayer.getToken();
         return true;
     }; 
 
@@ -23,6 +27,10 @@ const board = (() => {
 
             if (gameBoard[0][i] === sym && gameBoard[1][i] === sym && gameBoard[2][i] === sym) {
                 win = true; //check columns
+            }
+            
+            if (win) {
+                break;
             }
         }
 
@@ -38,34 +46,66 @@ const board = (() => {
 
     const getToken = (row, col) => {
         return gameBoard[row][col];
-    }
+    };
+
+    const initPlayers = () => {
+        let p1Name = prompt("Enter player 1 name (player 1 will have X token)");
+        let p2Name = prompt("Enter player 2 name (player 2 will have O token)");
+        p1 = Player(p1Name, X_TOKEN);
+        p2 = Player(p2Name, O_TOKEN);
+        currentPlayer = p1;
+
+        let playerHeader = document.getElementById("player-header");
+        let p1Title = document.createElement("p");
+        let p2Title = document.createElement("p");
+        p1Title.textContent = p1Name;
+        p2Title.textContent = p2Name;
+
+        playerHeader.innerHTML = '';
+        playerHeader.appendChild(p1Title);
+        playerHeader.appendChild(p2Title);
+
+        setupBoard();
+    };
+
+    const setupBoard = () => {
+        let grid = document.getElementsByClassName("token");
+        for (let i = 0; i < grid.length; i++) {
+            grid[i].addEventListener("click", function() {
+                let row = Math.floor(i / 3);
+                let col = i % 3;
+                if (!markBoard(row, col)) {
+                    alert("this position has already been marked");
+                    return;
+                } 
+                updateBoard(grid[i], currentPlayer.getToken());
+                if (checkWinner(currentPlayer.getToken())) {
+                    console.log("winner");
+                    alert(currentPlayer.getName() +'won!');
+                }
+                currentPlayer = (currentPlayer.getToken() === X_TOKEN) ? p2 : p1;
+            });
+        }
+    };
+
+    const updateBoard = (boardSquare, token) => {
+        boardSquare.textContent = token;
+    };
     
-    return {markBoard, checkWinner, getToken};
+    return {markBoard, checkWinner, getToken, initPlayers};
 })();
 
-const Player = (name, token) => {
-    let token = token;
-    let name = name;
+const Player = (pName, gameToken) => {
+    let token = gameToken;
+    let name = pName;
 
     const getName = () => {return name};
     const getToken = () => {return token};
-    const playTurn = (board, row, col) => {
-        if (!board.markBoard(token, row, col)) {
-            // do something here, since position is already taken
-        }
-        board.checkWinner(token);
-    };
 
-    return {getName, getToken, playTurn};
+    return {getName, getToken};
 };
 
-// probably not a good approach
-function playGame(p1Name, p2Name) {
-    let gameOver = false;
-    let player1 = Player(p1Name, X_TOKEN);
-    let player2 = Player(p2Name, O_TOKEN);
 
-    while (!gameOver) {
-        // busy waiting??
-    }
-}
+let newGameBtn = document.getElementById("new-game-btn");
+newGameBtn.addEventListener("click", board.initPlayers);
+
