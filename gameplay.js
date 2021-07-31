@@ -49,6 +49,8 @@ const board = (() => {
     };
 
     const initPlayers = () => {
+        clearBoard();
+        clearPlayerHeader();
         let p1Name = prompt("Enter player 1 name (player 1 will have X token)");
         let p2Name = prompt("Enter player 2 name (player 2 will have O token)");
         p1 = Player(p1Name, X_TOKEN);
@@ -72,6 +74,9 @@ const board = (() => {
         let grid = document.getElementsByClassName("token");
         for (let i = 0; i < grid.length; i++) {
             grid[i].addEventListener("click", function() {
+                if (typeof p1 === "undefined") {
+                    return; // a game hasn't been initiated yet
+                }
                 let row = Math.floor(i / 3);
                 let col = i % 3;
                 if (!markBoard(row, col)) {
@@ -80,12 +85,36 @@ const board = (() => {
                 } 
                 updateBoard(grid[i], currentPlayer.getToken());
                 if (checkWinner(currentPlayer.getToken())) {
-                    console.log("winner");
                     alert(currentPlayer.getName() +'won!');
+                    resetGame();
                 }
                 currentPlayer = (currentPlayer.getToken() === X_TOKEN) ? p2 : p1;
             });
         }
+    };
+
+    const resetGame = () => {
+        p1 = undefined;
+        p2 = undefined;
+        currentPlayer = undefined;
+    };
+
+    const clearBoard = () => {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                gameBoard[i][j] = '';
+            }
+        }
+        
+        let grid = document.getElementsByClassName("token");
+        for (let i = 0; i < 9; i++) {
+            grid[i].textContent = '';
+        }
+    };
+
+    const clearPlayerHeader = () => {
+        let pHeader = document.getElementById("player-header");
+        pHeader.textContent = "";
     };
 
     const updateBoard = (boardSquare, token) => {
